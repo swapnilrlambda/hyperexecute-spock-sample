@@ -1,0 +1,64 @@
+plugins {
+    id('groovy')
+}
+
+version = "1.0"
+description = "Spock Framework - Example Project"
+
+// Spock works with Java 1.8 and above
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+repositories {
+    // Spock releases are available from Maven Central
+    mavenCentral()
+    // Spock snapshots are available from the Sonatype OSS snapshot repository
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+dependencies {
+    // mandatory dependencies for using Spock
+    implementation platform('org.apache.groovy:groovy-bom:4.0.22')
+    implementation 'org.apache.groovy:groovy'
+    testImplementation platform("org.spockframework:spock-bom:2.3-groovy-4.0")
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.spockframework:spock-junit4"  // optional if your code does not rely on JUnit 4
+
+    // optional dependencies for using Spock
+    testImplementation "org.hamcrest:hamcrest-core:2.2"   // only necessary if Hamcrest matchers are used
+    testRuntimeOnly 'net.bytebuddy:byte-buddy:1.15.5'      // allows mocking of classes (in addition to interfaces)
+    testRuntimeOnly "org.objenesis:objenesis:3.4"          // allows mocking of classes without default constructor (together with ByteBuddy or CGLIB)
+
+    // dependencies used by examples in this project
+    testRuntimeOnly "com.h2database:h2:2.2.224"
+    implementation "org.apache.groovy:groovy-sql"
+
+    // Selenium dependencies for remote WebDriver usage
+    implementation 'org.seleniumhq.selenium:selenium-java:4.0.0'
+    implementation 'org.seleniumhq.selenium:selenium-remote-driver:4.0.0'
+    implementation 'org.seleniumhq.selenium:selenium-support:4.0.0'
+}
+
+// Custom task to run lambda.groovy
+task runLambda(type: JavaExec) {
+    group = 'Execution'
+    description = 'Runs the lambda.groovy script'
+    
+    // Specify the main class and classpath for Groovy
+    main = 'groovy.ui.GroovyMain'
+    classpath = sourceSets.main.runtimeClasspath
+
+    // Specify the path to your lambda.groovy file
+    args = ["$projectDir/src/test/groovy/lambda.groovy"]
+}
+
+// Testing setup
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
