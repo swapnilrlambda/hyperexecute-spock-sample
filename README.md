@@ -128,13 +128,9 @@ Visit the [HyperExecute Dashboard](https://hyperexecute.lambdatest.com/hyperexec
 
 ## Steps to Run on Standard Grid
  - Confgure the environment variables as mentioned above
- - Running one single test
+ - Running test
  ```bash
  ./gradlew runLambda
- ```
- - Running full suite
- ```bash
- ./gradlew clean runLambda
  ```
 
 ## LambdaTest Community :busts_in_silhouette:
