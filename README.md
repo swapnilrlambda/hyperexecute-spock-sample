@@ -74,7 +74,7 @@ testSuiteStep: 150
 
 runson: win
 
-concurrency: 1
+concurrency: 4
 
 cacheKey: '{{ checksum "build.gradle" }}'
 cacheDirectories:
@@ -90,7 +90,8 @@ pre:
 testDiscovery:
   mode: dynamic
   type: raw
-  command: echo runLambda
+  shell: bash
+  command: for i in {1..${HYE_CONCURRENCY}}; do echo 'runLambda'; done
 
 autosplit: true
 
