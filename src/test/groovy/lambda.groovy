@@ -6,8 +6,8 @@ import org.openqa.selenium.By
 class LambdaTestRemoteAutomation {
     static void main(String[] args) {
         // LambdaTest credentials
-        String username = "linpaws13"  // Replace with your LambdaTest username
-        String accessKey = "7HzTZNYQr2ODUvr3XO4iXdVfQPRRZcYIEeRiGsQxD9Ndva763B"  // Replace with your LambdaTest access key
+        String username = System.getenv("LT_USERNAME"); // Replace with your LambdaTest username
+        String accessKey = System.getenv("LT_ACCESS_KEY");  // Replace with your LambdaTest access key
 
         // LambdaTest remote URL
         String hubURL = "https://"+username+":"+accessKey+"@hub.lambdatest.com/wd/hub"
