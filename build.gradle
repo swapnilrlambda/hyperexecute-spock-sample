@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.seleniumhq.selenium:selenium-java:4.0.0'
     implementation 'org.seleniumhq.selenium:selenium-remote-driver:4.0.0'
     implementation 'org.seleniumhq.selenium:selenium-support:4.0.0'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
 // Custom task to run lambda.groovy
@@ -52,13 +53,13 @@ task runLambda(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
     // Specify the path to your lambda.groovy file
-    args = ["$projectDir/src/test/groovy/lambda.groovy"]
+    args = ["$projectDir/src/test/groovy/lambda-gradle.groovy"]
 }
 
 // Testing setup
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
+// test {
+//     useJUnitPlatform()
+//     testLogging {
+//         events "passed", "skipped", "failed"
+//     }
+// }

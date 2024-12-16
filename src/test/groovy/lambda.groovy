@@ -1,51 +1,56 @@
+import org.junit.jupiter.api.Test
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.By
 
-class LambdaTestRemoteAutomation {
-    static void main(String[] args) {
+import static org.junit.jupiter.api.Assertions.assertTrue
+
+class LambdaTestRemoteAutomationTest {
+
+    @Test
+    void testLambdaTestAutomation() throws Exception {
         // LambdaTest credentials
-        String username = System.getenv("LT_USERNAME"); // Replace with your LambdaTest username
-        String accessKey = System.getenv("LT_ACCESS_KEY");  // Replace with your LambdaTest access key
+        String username = System.getenv("LT_USERNAME")
+        String accessKey = System.getenv("LT_ACCESS_KEY")
+
+        assert username != null && accessKey != null : "LambdaTest credentials are not set."
 
         // LambdaTest remote URL
-        String hubURL = "https://"+username+":"+accessKey+"@hub.lambdatest.com/wd/hub"
+        String hubURL = "https://${username}:${accessKey}@hub.lambdatest.com/wd/hub"
 
-        // Desired capabilities for the browser (Chrome in this case)
+        // Desired capabilities
         DesiredCapabilities capabilities = new DesiredCapabilities()
         capabilities.setCapability("browserName", "Chrome")
         capabilities.setCapability("browserVersion", "latest")
-        capabilities.setCapability("platform", "Windows 10")  // Platform can be adjusted based on your requirements
+        capabilities.setCapability("platform", "Windows 10")
 
-        // Optional capabilities for LambdaTest
+        // LambdaTest options
         Map<String, Object> ltOptions = new HashMap<>()
-        ltOptions.put("build", "Groovy Remote Test")
-        ltOptions.put("name", "Groovy LambdaTest Chrome Test")
+        ltOptions.put("build", "Maven Remote Test")
+        ltOptions.put("name", "Maven LambdaTest Chrome Test")
         ltOptions.put("platformName", "Windows 10")
         ltOptions.put("resolution", "1920x1080")
 
         capabilities.setCapability("LT:Options", ltOptions)
 
-        // Initialize RemoteWebDriver for LambdaTest
-        WebDriver driver = new RemoteWebDriver(new URL(hubURL), capabilities)
-
+        WebDriver driver = null
         try {
-            // Navigate to LambdaTest homepage
-            driver.get("https://www.lambdatest.com")
+            driver = new RemoteWebDriver(new URL(hubURL), capabilities)
 
-            // Maximize the browser window
+            // Perform test steps
+            driver.get("https://www.lambdatest.com")
             driver.manage().window().maximize()
 
-            // Find the "Login" button by its CSS Selector and click on it
             def loginButton = driver.findElement(By.cssSelector("a[href*='login']"))
             loginButton.click()
 
-            // Optionally, wait for a few seconds to visually verify the login page is opened
             Thread.sleep(3000)
+            assertTrue(driver.getCurrentUrl().contains("login"))
         } finally {
-            // Close the browser
-            driver.quit()
+            if (driver != null) {
+                driver.quit()
+            }
         }
     }
 }

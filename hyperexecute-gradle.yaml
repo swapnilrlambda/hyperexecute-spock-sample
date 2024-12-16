@@ -1,0 +1,36 @@
+---
+version: 0.1
+globalTimeout: 150
+testSuiteTimeout: 150
+testSuiteStep: 150
+
+runson: win
+
+concurrency: 4
+
+# Dependency caching for Windows
+cacheKey: '{{ checksum "build.gradle" }}'
+cacheDirectories:
+  - ./.gradle
+
+runtime:
+  language: java
+  version: 21
+
+pre:
+  # Download and install packages in the .gradle directory.
+  # Skip execution of the tests in the pre step
+  - gradlew clean build
+
+testDiscovery:
+  mode: dynamic
+  type: raw
+  shell: bash
+  command: for i in {1..${HYE_CONCURRENCY}}; do echo 'Gradle-runLambda'; done
+
+
+autosplit: true
+
+testRunnerCommand: ./gradlew runLambda
+
+jobLabel: ["gradle-spock-sample"]

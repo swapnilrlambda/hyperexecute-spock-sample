@@ -5,13 +5,12 @@ testSuiteTimeout: 150
 testSuiteStep: 150
 
 runson: win
-
 concurrency: 4
 
 # Dependency caching for Windows
-cacheKey: '{{ checksum "build.gradle" }}'
+cacheKey: '{{ checksum "pom.xml" }}'
 cacheDirectories:
-  - ./.gradle
+  - .m2
 
 runtime:
   language: java
@@ -20,15 +19,17 @@ runtime:
 pre:
   # Download and install packages in the .gradle directory.
   # Skip execution of the tests in the pre step
-  - gradlew clean build
+  - mvn dependency:resolve
 
 testDiscovery:
   mode: dynamic
   type: raw
   shell: bash
-  command: for i in {1..${HYE_CONCURRENCY}}; do echo 'runLambda'; done
+  command: for i in {1..${HYE_CONCURRENCY}}; do echo 'Maven-runLambda'; done
 
 
 autosplit: true
 
-testRunnerCommand: ./gradlew $test
+testRunnerCommand: mvn test
+
+jobLabel: ["mvn-spock-sample"]
